@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import DashboardLayout from "../../component/layout/DashboardLayout.js";
+import DashboardLayout from "../../component/layout/DashboardLayout.jsx";
 import { useUserAuth } from "../../hooks/useUserAuth.jsx";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../utils/axiosInstance.js";
