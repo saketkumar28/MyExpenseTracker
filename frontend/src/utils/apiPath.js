@@ -1,6 +1,6 @@
 // import { downloadIncomeExcel } from "../../../backend/controllers/incomeController";
 
-export const BASE_URL = "https://myexpensetracker-52ah.onrender.com";
+export const BASE_URL = "https://myexpensetracker-52ah.onrender.com/api/v1";
 
 export const API_PATH = {
   AUTH: {
