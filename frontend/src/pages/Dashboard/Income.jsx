@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import DashboardLayout from '../../component/layout/DashboardLayout';
-import { useUserAuth } from '../../hooks/useUserAuth';
-import { axiosInstance } from '../../utils/axiosInstance';
-import { API_PATH } from '../../utils/apiPath';
-import { addThousandsSeperator } from '../../utils/helper';
+import React, { useEffect, useState } from "react";
+import DashboardLayout from "../../component/layout/DashboardLayout.jsx";
+import { useUserAuth } from "../../hooks/useUserAuth.jsx";
+import { axiosInstance } from "../../utils/axiosInstance.js";
+import { API_PATH } from "../../utils/apiPath.js";
+import { addThousandsSeperator } from "../../utils/helper.js";
 
 const Income = () => {
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ source: '', amount: '', date: '' });
+  const [formData, setFormData] = useState({
+    source: "",
+    amount: "",
+    date: "",
+  });
   const [income, setIncome] = useState([]);
   const [loading, setLoading] = useState(false);
   const [ascending, setAscending] = useState(true); // State to track sorting direction
@@ -22,7 +26,7 @@ const Income = () => {
         setIncome(res.data);
       }
     } catch (err) {
-      console.error('Error fetching income:', err);
+      console.error("Error fetching income:", err);
     } finally {
       setLoading(false);
     }
@@ -32,15 +36,15 @@ const Income = () => {
     e.preventDefault();
     try {
       await axiosInstance.post(API_PATH.INCOME.ADD_INCOME, formData);
-      
+
       // reset form
-      setFormData({ source: '', amount: '', date: '' });
+      setFormData({ source: "", amount: "", date: "" });
       setShowForm(false);
 
       // refresh list
       fetchIncome();
     } catch (err) {
-      console.error('Error adding income:', err);
+      console.error("Error adding income:", err);
     }
   };
 
@@ -50,35 +54,32 @@ const Income = () => {
 
   const handleDownload = async () => {
     try {
-      const response = await axiosInstance.get(
-        API_PATH.INCOME.DOWNLOAD,
-        {
-          responseType: 'blob',
-        }
-      );
-  
-      const blob = new Blob([response.data], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      const response = await axiosInstance.get(API_PATH.INCOME.DOWNLOAD, {
+        responseType: "blob",
       });
-  
+
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
       const url = window.URL.createObjectURL(blob);
-  
-      const link = document.createElement('a');
+
+      const link = document.createElement("a");
       link.href = url;
-      link.download = 'income.xlsx';
-  
+      link.download = "income.xlsx";
+
       document.body.appendChild(link);
       link.click();
-  
+
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Download failed:', error);
+      console.error("Download failed:", error);
     }
   };
-  
+
   const handleSort = () => {
-    setIncome(prevIncome => {
+    setIncome((prevIncome) => {
       const sorted = [...prevIncome].sort((a, b) => {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
@@ -87,12 +88,11 @@ const Income = () => {
       });
       return sorted;
     });
-    
+
     // Toggle the direction for the NEXT click
     setAscending(!ascending);
   };
-  
-  
+
   return (
     <DashboardLayout activeMenu="Income">
       <div className="my-5 mx-auto">
@@ -104,7 +104,6 @@ const Income = () => {
           >
             + Add Income
           </button>
-          
         </div>
 
         {showForm && (
@@ -162,10 +161,9 @@ const Income = () => {
                   <th className="py-2 cursor-pointer" onClick={handleSort}>
                     Date
                     <span className="ml-2 text-sm text-gray-500">
-                      {ascending ? '↓' : '↑'} 
+                      {ascending ? "↓" : "↑"}
                     </span>
                   </th>
-
                 </tr>
               </thead>
               <tbody>
@@ -184,7 +182,12 @@ const Income = () => {
             </table>
           )}
         </div>
-        <button onClick={handleDownload} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">Download Excel</button>
+        <button
+          onClick={handleDownload}
+          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Download Excel
+        </button>
       </div>
     </DashboardLayout>
   );

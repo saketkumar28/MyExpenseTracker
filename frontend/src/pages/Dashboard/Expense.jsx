@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import DashboardLayout from '../../component/layout/DashboardLayout';
-import { useUserAuth } from '../../hooks/useUserAuth';
-import { axiosInstance } from '../../utils/axiosInstance';
-import { API_PATH } from '../../utils/apiPath';
-import { addThousandsSeperator } from '../../utils/helper';
+import React, { useEffect, useState } from "react";
+import DashboardLayout from "../../component/layout/DashboardLayout.jsx";
+import { useUserAuth } from "../../hooks/useUserAuth.jsx";
+import { axiosInstance } from "../../utils/axiosInstance.js";
+import { API_PATH } from "../../utils/apiPath.js";
+import { addThousandsSeperator } from "../../utils/helper.js";
 
 const Expense = () => {
   useUserAuth();
@@ -13,9 +13,9 @@ const Expense = () => {
   const [ascending, setAscending] = useState(true); // State to track sorting direction
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    source: '',
-    amount: '',
-    date: '',
+    source: "",
+    amount: "",
+    date: "",
   });
 
   const fetchExpenses = async () => {
@@ -27,7 +27,7 @@ const Expense = () => {
         setExpenses(res.data);
       }
     } catch (err) {
-      console.error('Error fetching expenses:', err);
+      console.error("Error fetching expenses:", err);
     } finally {
       setLoading(false);
     }
@@ -39,13 +39,13 @@ const Expense = () => {
       await axiosInstance.post(API_PATH.EXPENSE.ADD_EXPENSE, formData);
 
       // reset
-      setFormData({ source: '', amount: '', date: '' });
+      setFormData({ source: "", amount: "", date: "" });
       setShowForm(false);
 
       // refresh
       fetchExpenses();
     } catch (err) {
-      console.error('Error adding expense:', err);
+      console.error("Error adding expense:", err);
     }
   };
 
@@ -54,48 +54,45 @@ const Expense = () => {
   }, []);
 
   const handleDownload = async () => {
-      try {
-        const response = await axiosInstance.get(
-          API_PATH.EXPENSE.DOWNLOAD,
-          {
-            responseType: 'blob',
-          }
-        );
-    
-        const blob = new Blob([response.data], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        });
-    
-        const url = window.URL.createObjectURL(blob);
-    
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'expense.xlsx';
-    
-        document.body.appendChild(link);
-        link.click();
-    
-        link.remove();
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error('Download failed:', error);
-      }
-    };
-
-    const handleSort = () => {
-      setExpenses(prevExpense => {
-        const sorted =  prevExpense.sort((a, b) => {
-          const dateA = new Date(a.date);
-          const dateB = new Date(b.date);
-          // Toggle logic: if ascending is true, sort Desc; else sort Asc
-          return ascending ? dateB - dateA : dateA - dateB;
-        });
-        return sorted;
+    try {
+      const response = await axiosInstance.get(API_PATH.EXPENSE.DOWNLOAD, {
+        responseType: "blob",
       });
-      
-      // Toggle the direction for the NEXT click
-      setAscending(!ascending);
-    };
+
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "expense.xlsx";
+
+      document.body.appendChild(link);
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
+
+  const handleSort = () => {
+    setExpenses((prevExpense) => {
+      const sorted = prevExpense.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        // Toggle logic: if ascending is true, sort Desc; else sort Asc
+        return ascending ? dateB - dateA : dateA - dateB;
+      });
+      return sorted;
+    });
+
+    // Toggle the direction for the NEXT click
+    setAscending(!ascending);
+  };
 
   return (
     <DashboardLayout activeMenu="Expense">
@@ -165,7 +162,7 @@ const Expense = () => {
                   <th className="py-2 cursor-pointer" onClick={handleSort}>
                     Date
                     <span className="ml-2 text-sm text-gray-500">
-                      {ascending ? '↓' : '↑'} 
+                      {ascending ? "↓" : "↑"}
                     </span>
                   </th>
                 </tr>
@@ -186,7 +183,12 @@ const Expense = () => {
             </table>
           )}
         </div>
-        <button onClick={handleDownload} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">Download Excel</button>
+        <button
+          onClick={handleDownload}
+          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Download Excel
+        </button>
       </div>
     </DashboardLayout>
   );
